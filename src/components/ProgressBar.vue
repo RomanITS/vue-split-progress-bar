@@ -1,11 +1,8 @@
 <template>
   <div class="progress" :class="{ active: showInfo }">
-    <!-- Заголовок progress -->
     <p v-if="label" class="progress__name">{{ label }}</p>
     <div class="progress__block">
-      <!-- Всплывающая подсказка progress bar -->
       <div ref="progress-popover" class="progress__popover">
-        <!-- Название и проценты progress bar -->
         <span
           class="progress__popover-title"
           :class="{
@@ -13,14 +10,12 @@
           }"
           :style="customStyle"
         >
-          {{ name }} — {{ percent }}
+          {{ name }} — {{ percent }}11
         </span>
-        <!-- Значение progress bar -->
         <span class="progress__popover-count">{{ value }} employees</span>
       </div>
 
       <div ref="progress-bar" class="progress__bar">
-        <!-- Список progress bar -->
         <div
           v-for="(item, index) in formattedOptions"
           :key="index"
@@ -43,57 +38,37 @@
 export default {
   name: 'ProgressBar',
   props: {
-    /** Данные для заполнения progress */
     data: {
       type: [Object, Array],
       default: null,
       required: true
     },
-    /** Название progress */
     label: {
       type: String,
       default: '',
       required: false
     },
-    /** Максимальное значение progress */
     max: {
       type: Number,
       default: 100
     },
-    options: {
-      type: Object,
-      default: () => {return {}}
-    }
   },
   data () {
     return {
-      /** Стандартный массив стилей */
-      styles: this.option?.styles || ['low', 'middle', 'high', 'none'],
-
-      /** Контроль видимости подсказки */
-      showInfo: this.option?.showInfo || false,
-
-      /** Значение процентов для подсказки */
-      percent: this.option?.percent || '',
-
-      /** Значение количества для подсказки */
-      value: this.option?.value || '',
-
-      /** Значение названия для подсказки */
-      name: this.option?.name || '',
-
-      /** Значение стиля для подсказки */
-      style: this.option?.style || '',
-
-      /** Переменная для пользовательских стилей progress bar */
-      customStyle: this.option?.customStyle || {}
+      styles: ['low', 'middle', 'high', 'none'],
+      showInfo: false,
+      percent: '',
+      value: '',
+      name: '',
+      style: '',
+      customStyle: {}
     }
   },
   computed: {
-    /** Вычисляем данных для progress bar (проценты, значение Not Rated, рандомный цвет) */
+    /** Calculate data for progress bar (percentage, Not Rated value, random color) */
     formattedOptions () {
       let localSum = 0
-      /** Переобразрвание данных для progress bar */
+      /** Data transformation for progress bar */
       let formatOptions = this.data.map(el => {
         localSum += el.value
         const obj = {
@@ -105,9 +80,6 @@ export default {
           value: el.value
         }
 
-        /**
-         * В случае когда поле стиля пустое будет сгенерирован рандомный цвет progress bar
-         */
         const randomColor = Math.floor(Math.random() * 16777215).toString(16)
 
         if (!this.styles.includes(el.style)) {
@@ -119,7 +91,6 @@ export default {
         return obj
       })
 
-      /** Вычисление поля Not Rated */
       if (localSum < this.max) {
         formatOptions.push({
           style: 'none',
@@ -136,10 +107,10 @@ export default {
   },
   methods: {
     /**
-     * Метод формирования данных и стилей для всплывающей подсказки.
-     * Отдает заголовок, проценты, значение, стиль для выбранного progress bar.
-     * @param {Event} e - Дескриптор события.
-     * @param {Object} item - Данные progress bar.
+     * Method for generating data and styles for the tooltip.
+     * Gives the title, percentage, value, style for the selected progress bar.
+     * @param {Event} e - Event handle.
+     * @param {Object} item - Progress bar data.
      */
     hoverProgressBlock (e, { percent, style, customStyle, name, value }) {
       this.percent = percent
@@ -160,7 +131,7 @@ export default {
       const progressPopoverWidth = popover.offsetWidth
       const progressColorWidth = e.target.offsetWidth
 
-      /** Позиционирование всплывающей подсказки */
+      /** Tooltip Positioning */
       if (position + progressPopoverWidth > progressItem.offsetWidth) {
         popover.style.left = position + progressColorWidth + 'px'
         popover.style.transform = 'translate(-100%, -50%)'
